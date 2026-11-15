@@ -19,11 +19,11 @@ texture = ExtResource("1_u5sy4")
 [node name="Level 1" parent="." unique_id=1126981036 instance=ExtResource("1_lbhrr")]
 
 [node name="StaticBody2D2" parent="." unique_id=843230710 instance=ExtResource("2_iywne")]
-position = Vector2(776, 464)
+position = Vector2(755, 454)
 scale = Vector2(2, 4)
 
 [node name="StaticBody2D" parent="." unique_id=118579619 instance=ExtResource("2_iywne")]
-position = Vector2(778, 210)
+position = Vector2(754, 207)
 scale = Vector2(2, 4)
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=362324082]

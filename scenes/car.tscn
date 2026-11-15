@@ -1,29 +1,58 @@
 [gd_scene format=3 uid="uid://cvlxstcmvxm3m"]
 
 [ext_resource type="Script" uid="uid://b5ep86k3j8rr4" path="res://scripts/car.gd" id="1_uoj53"]
-[ext_resource type="Texture2D" uid="uid://beraabwc7r6g2" path="res://assets/car.png" id="2_k61xc"]
+[ext_resource type="Texture2D" uid="uid://bjjk2gbs0vubg" path="res://assets/carFrame1.png" id="2_cp117"]
+[ext_resource type="Texture2D" uid="uid://dj0glysxnj14n" path="res://assets/car frame 2.png" id="3_4clw4"]
+[ext_resource type="Texture2D" uid="uid://5wdqsnvww5n1" path="res://assets/car frame 3.png" id="4_ctevm"]
+[ext_resource type="Texture2D" uid="uid://btk7lrjygn0gt" path="res://assets/car frame 4.png" id="5_uraa1"]
+[ext_resource type="Texture2D" uid="uid://b5v0tjnktmqrm" path="res://assets/car frame 5.png" id="6_gm33m"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_le82g"]
-size = Vector2(19.28125, 17.75)
+[sub_resource type="SpriteFrames" id="SpriteFrames_odilm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_cp117")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_4clw4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ctevm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_uraa1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_gm33m")
+}],
+"loop": 0,
+"name": &"turn",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ry0np"]
+size = Vector2(250, 172)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_odilm"]
-size = Vector2(125, 87)
+size = Vector2(125, 86.5)
 
 [node name="car" type="CharacterBody2D" unique_id=887401131]
 script = ExtResource("1_uoj53")
 
-[node name="CarSideSvgrepoCom" type="Sprite2D" parent="." unique_id=947123103]
-scale = Vector2(0.429, 0.43)
-texture = ExtResource("2_k61xc")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1426728232]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_odilm")
+animation = &"turn"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1292953604]
-position = Vector2(-4, 0)
-shape = SubResource("RectangleShape2D_le82g")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1904942048]
+position = Vector2(-1.5, 0)
+scale = Vector2(0.5, 0.5)
+shape = SubResource("RectangleShape2D_ry0np")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=229924449]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1825946752]
-position = Vector2(-0.5, 0.5)
+position = Vector2(-1.5, -0.25)
 shape = SubResource("RectangleShape2D_odilm")
 
 [connection signal="lvl_play" from="." to="." method="_on_lvl_play"]
