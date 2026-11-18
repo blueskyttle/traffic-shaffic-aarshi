@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://cuopgb7ce8oxg"]
+
+[ext_resource type="Script" uid="uid://cntrme0o43gee" path="res://scripts/Level2/speed_limit.gd" id="1_fbeyh"]
+[ext_resource type="Texture2D" uid="uid://bin7hel8kcw4g" path="res://assets/cattle ahead.png" id="1_wkhx2"]
+[ext_resource type="FontFile" uid="uid://dnw3gmmsf4lfv" path="res://assets/PixelOperator8-Bold.ttf" id="2_wkhx2"]
+[ext_resource type="Texture2D" uid="uid://bst8i78yd1x6v" path="res://assets/civilian crossing ahead.png" id="4_0edm3"]
+[ext_resource type="Texture2D" uid="uid://bp1l1ltkc6o3m" path="res://assets/school ahead.png" id="5_ouf8t"]
+[ext_resource type="Script" uid="uid://57fkiekp7vbl" path="res://scripts/Level2/speed_button.gd" id="6_o0scd"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fbeyh"]
+radius = 115.27792
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fbeyh"]
+bg_color = Color(0, 0.5176471, 0.42352942, 0.47843137)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_odilm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_wkhx2")
+}],
+"loop": 1,
+"name": &"20",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_0edm3")
+}],
+"loop": 1,
+"name": &"30",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_ouf8t")
+}],
+"loop": 1,
+"name": &"50",
+"speed": 5.0
+}]
+
+[node name="speed_limit" type="Node2D" unique_id=1126981036]
+script = ExtResource("1_fbeyh")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1509520155]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=777693469]
+position = Vector2(-1, 10)
+shape = SubResource("CircleShape2D_fbeyh")
+
+[node name="Label" type="Label" parent="." unique_id=850572589]
+offset_right = 613.3333
+offset_bottom = 447.0
+theme_override_fonts/font = ExtResource("2_wkhx2")
+theme_override_font_sizes/font_size = 46
+theme_override_styles/normal = SubResource("StyleBoxFlat_fbeyh")
+text = "SPEED LIMIT
+
+blahbalahbala"
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1911943686]
+sprite_frames = SubResource("SpriteFrames_odilm")
+animation = &"50"
+
+[node name="speed buttons" type="VBoxContainer" parent="." unique_id=992650001]
+offset_right = 615.0
+offset_bottom = 450.0
+
+[node name="twenty" type="Button" parent="speed buttons" unique_id=1226770137]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_wkhx2")
+theme_override_font_sizes/font_size = 98
+text = "20"
+script = ExtResource("6_o0scd")
+
+[node name="thirty" type="Button" parent="speed buttons" unique_id=1528820125]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_wkhx2")
+theme_override_font_sizes/font_size = 98
+text = "30"
+script = ExtResource("6_o0scd")
+
+[node name="fifty" type="Button" parent="speed buttons" unique_id=2015474810]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_wkhx2")
+theme_override_font_sizes/font_size = 98
+text = "50"
+script = ExtResource("6_o0scd")
+
+[connection signal="clicked" from="." to="speed buttons/twenty" method="_on_speed_limit_clicked"]
+[connection signal="clicked" from="." to="speed buttons/thirty" method="_on_speed_limit_clicked"]
+[connection signal="clicked" from="." to="speed buttons/fifty" method="_on_speed_limit_clicked"]
+[connection signal="unclicked" from="." to="speed buttons/twenty" method="_on_speed_limit_unclicked"]
+[connection signal="unclicked" from="." to="speed buttons/thirty" method="_on_speed_limit_unclicked"]
+[connection signal="unclicked" from="." to="speed buttons/fifty" method="_on_speed_limit_unclicked"]
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]
+[connection signal="pressed" from="speed buttons/twenty" to="." method="_on_twenty_pressed"]
+[connection signal="pressed" from="speed buttons/thirty" to="." method="_on_thirty_pressed"]
+[connection signal="pressed" from="speed buttons/fifty" to="." method="_on_fifty_pressed"]

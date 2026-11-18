@@ -34,7 +34,7 @@ animations = [{
 size = Vector2(250, 172)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_odilm"]
-size = Vector2(125, 86.5)
+size = Vector2(183.5, 90)
 
 [node name="car" type="CharacterBody2D" unique_id=887401131]
 script = ExtResource("1_uoj53")
@@ -52,7 +52,8 @@ shape = SubResource("RectangleShape2D_ry0np")
 [node name="Area2D" type="Area2D" parent="." unique_id=229924449]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1825946752]
-position = Vector2(-1.5, -0.25)
+position = Vector2(-1, 0.99999976)
+scale = Vector2(0.735, 0.915)
 shape = SubResource("RectangleShape2D_odilm")
 
 [connection signal="lvl_play" from="." to="." method="_on_lvl_play"]

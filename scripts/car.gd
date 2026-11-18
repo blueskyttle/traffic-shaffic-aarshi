@@ -16,8 +16,13 @@ var current_direction: Vector2 = Vector2.ZERO
 var last_cell := Vector2i(-999, -999)
 var previous_direction: Vector2 = Vector2.ZERO
 var last_anim_cell := Vector2i(-999, -999)
-	
+var turn_sig := false
+const CAR_FRAME_1 = preload("uid://bjjk2gbs0vubg")
+
+
 signal lvl_play
+signal death
+signal victory
 
 func pause1() -> void:
 	get_tree().paused = true
@@ -41,29 +46,32 @@ func _ready() -> void:
 
 	print(tilemap_layer.get_path(), " used: ", tilemap_layer.get_used_rect())
 	pause1()
+	
 
-const CAR_FRAME_1 = preload("uid://bjjk2gbs0vubg")
 
-func _physics_process(_delta: float) -> void:
-	update_direction_from_tile()
-	velocity = current_direction * speed
-	move_and_slide()
+func _process(delta):
 	if Global.safe:
-		await get_tree().create_timer(1.5).timeout
+		await get_tree().create_timer(2).timeout
 		speed = 0
 		await get_tree().create_timer(1).timeout
 		speed = 400.0
 		await get_tree().create_timer(1).timeout
-		get_tree().change_scene_to_file("res://scenes/victory.tscn")
+		victory.emit()
+
+
+
+
+func _physics_process(_delta: float) -> void:
+	update_direction_from_tile()
+	if not turn_sig:
+			velocity = current_direction * speed * Global.speed_mult
+	move_and_slide()
+	
 
 
 func _on_pause_toggled(toggled_on: bool) -> void:
 	if toggled_on:
-		pause.icon = load("res://assets/pause.png")
-		update_direction_from_tile()
-		resume()
 		lvl_play.emit()
-		print("emitted")
 		
 const TURNS := {
 	"RU": [0, false],   "UL": [-90, false],
@@ -76,6 +84,7 @@ func update_car_turn() -> void:
 	if current_direction == previous_direction:
 		return
 	car.play("run")
+	
 
 	previous_direction = current_direction
 	
@@ -88,7 +97,6 @@ func update_direction_from_tile() -> void:
 
 	if cell != last_cell:
 		last_cell = cell
-		print("cell ", cell, " dir=", data.get_custom_data("direction") if data else "none")
 
 	if data:
 		var value := str(data.get_custom_data("direction")).strip_edges().to_upper()
@@ -117,13 +125,29 @@ func update_direction_from_tile() -> void:
 			car.play("turn", turn_anim_speed)
 	else:
 		anim_played = false 			
-	
+		
 func _on_lvl_play():
 	pause.toggle_mode = false
 	Global.play = true
+	pause.icon = load("res://assets/pause.png")
+	update_direction_from_tile()
+	resume()
 	
 
 func _on_area_2d_body_entered(body):
 	if body.is_in_group('npc'):
-		print("crash")
-		get_tree().change_scene_to_file("res://scenes/death.tscn")
+		print("woah")
+		death.emit()
+
+
+func _on_turn_right_turn():
+	print("entered")
+	turn_sig = true
+	car.play("turn", turn_anim_speed)
+	velocity = Vector2(0,1) * speed * Global.speed_mult
+	anim_played = true
+	car.rotation_degrees = TURNS["RD"][0]
+	car.flip_h = TURNS["RD"][1]
+	car.play("turn", turn_anim_speed)
+	print(speed)
+	

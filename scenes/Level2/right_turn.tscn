@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://dmx2be84h4f6m"]
+
+[ext_resource type="Script" uid="uid://4agfn7hw1uh0" path="res://scripts/Level2/right_turn.gd" id="1_4tltx"]
+[ext_resource type="Texture2D" uid="uid://g7kx6s2ft5xs" path="res://assets/compulsory right turn.png" id="2_metyf"]
+[ext_resource type="FontFile" uid="uid://dnw3gmmsf4lfv" path="res://assets/PixelOperator8-Bold.ttf" id="3_b3amd"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qql8j"]
+radius = 126.1943
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bd1cu"]
+bg_color = Color(0, 0.5176471, 0.42352942, 0.47843137)
+
+[node name="turn" type="Node2D" unique_id=873896466]
+script = ExtResource("1_4tltx")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1675813549]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1492923531]
+shape = SubResource("CircleShape2D_qql8j")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=312450733]
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("2_metyf")
+
+[node name="Label" type="Label" parent="." unique_id=2120834622]
+offset_right = 613.3333
+offset_bottom = 447.0
+theme_override_fonts/font = ExtResource("3_b3amd")
+theme_override_font_sizes/font_size = 46
+theme_override_styles/normal = SubResource("StyleBoxFlat_bd1cu")
+text = "RIGHT TURN
+
+blahbalahbala"
+vertical_alignment = 1
+autowrap_mode = 2
+
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]
