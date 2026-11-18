@@ -49,23 +49,17 @@ func _ready() -> void:
 	
 
 
-func _process(delta):
-	if Global.safe:
-		await get_tree().create_timer(2).timeout
-		speed = 0
-		await get_tree().create_timer(1).timeout
-		speed = 400.0
-		await get_tree().create_timer(1).timeout
-		victory.emit()
-
+# The stop / green light / victory sequence is handled by the traffic signal's ray
+# (scripts/traffic_signal.gd).
 
 
 
 func _physics_process(_delta: float) -> void:
 	update_direction_from_tile()
 	if not turn_sig:
-			velocity = current_direction * speed * Global.speed_mult
+			velocity = current_direction * minf(speed, Global.speed_cap_px()) * Global.speed_mult
 	move_and_slide()
+	_check_hit_npc()
 	
 
 
@@ -144,10 +138,66 @@ func _on_turn_right_turn():
 	print("entered")
 	turn_sig = true
 	car.play("turn", turn_anim_speed)
-	velocity = Vector2(0,1) * speed * Global.speed_mult
+	velocity = Vector2(0,1) * minf(speed, Global.speed_cap_px()) * Global.speed_mult
 	anim_played = true
 	car.rotation_degrees = TURNS["RD"][0]
 	car.flip_h = TURNS["RD"][1]
 	car.play("turn", turn_anim_speed)
 	print(speed)
 	
+
+
+# Called by the stop sign: stand still for a while, then carry on at the same speed.
+func stop_for(seconds: float) -> void:
+	var normal_speed: float = Global.speed_mult
+	Global.speed_mult = 0.0
+	await get_tree().create_timer(seconds).timeout
+	Global.speed_mult = normal_speed
+
+
+# Crash: the car's body touches an NPC (car or pedestrian), not only its crash area.
+var hit_npc_sent := false
+
+func _check_hit_npc() -> void:
+	if hit_npc_sent:
+		return
+	for i in get_slide_collision_count():
+		var other := get_slide_collision(i).get_collider() as Node
+		if other != null and other.is_in_group("npc"):
+			hit_npc_sent = true
+			death.emit()
+			return
+
+
+# --- Level 3 direction signs ---------------------------------------------------------------
+var u_turned := false          # true once the car made a U-turn
+const U_TURN_SHIFT := 66.0     # how far the car drops into the other half of the road when it U-turns
+
+# Compulsory left turn: heading east, turn left = north (onto the grass in Level 3).
+func _on_turn_left_turn() -> void:
+	if turn_sig:
+		return
+	turn_sig = true
+	velocity = Vector2.UP * minf(speed, Global.speed_cap_px()) * Global.speed_mult
+	anim_played = true
+	car.rotation_degrees = TURNS["RU"][0]
+	car.flip_h = TURNS["RU"][1]
+	car.play("turn", turn_anim_speed)
+
+# U-turn: drop into the other half of the road, then drive back the way we came (west).
+func _on_u_turn() -> void:
+	if turn_sig:
+		return
+	turn_sig = true
+	u_turned = true
+	var v := minf(speed, Global.speed_cap_px()) * Global.speed_mult
+	velocity = Vector2.DOWN * v
+	anim_played = true
+	car.rotation_degrees = TURNS["RD"][0]
+	car.flip_h = TURNS["RD"][1]
+	car.play("turn", turn_anim_speed)
+	await get_tree().create_timer(U_TURN_SHIFT / maxf(v, 60.0)).timeout
+	velocity = Vector2.LEFT * minf(speed, Global.speed_cap_px()) * Global.speed_mult
+	car.rotation_degrees = TURNS["DL"][0]
+	car.flip_h = TURNS["DL"][1]
+	car.play("turn", turn_anim_speed)

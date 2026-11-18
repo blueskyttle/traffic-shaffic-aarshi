@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://dbvivqhp5kohl"]
+
+[ext_resource type="PackedScene" path="res://scenes/info_box.tscn" id="99_infobox"]
+[ext_resource type="Script" uid="uid://oind5jeaiglv" path="res://scripts/Level3/stop.gd" id="1_pwsay"]
+[ext_resource type="Texture2D" uid="uid://bnnxa6ywoqj1h" path="res://assets/stop sign.png" id="2_t0hx4"]
+[ext_resource type="FontFile" uid="uid://dnw3gmmsf4lfv" path="res://assets/PixelOperator8-Bold.ttf" id="3_w601o"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qql8j"]
+radius = 126.1943
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ray"]
+size = Vector2(20, 866)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bd1cu"]
+bg_color = Color(0, 0.5176471, 0.42352942, 0.47843137)
+
+[node name="stop" type="Node2D" unique_id=873896466]
+script = ExtResource("1_pwsay")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1675813549]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1492923531]
+shape = SubResource("CircleShape2D_qql8j")
+
+[node name="Ray" type="Area2D" parent="."]
+collision_layer = 0
+input_pickable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ray"]
+position = Vector2(-130, 0)
+shape = SubResource("RectangleShape2D_ray")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=312450733]
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("2_t0hx4")
+
+[node name="Label" parent="." instance=ExtResource("99_infobox")]
+title = "STOP SIGN"
+description = "Come to a complete stop before the sign, then go when the road is clear."
+
+[connection signal="body_entered" from="Ray" to="." method="_on_ray_body_entered"]
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]

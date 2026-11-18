@@ -23,7 +23,7 @@ Global="*uid://p7nsx8k23q8c"
 
 window/size/initial_position=Vector2i(576, 324)
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+window/stretch/aspect="keep"
 
 [global_group]
 

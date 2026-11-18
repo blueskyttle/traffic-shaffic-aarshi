@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/info_box.gd" id="1_info"]
+[ext_resource type="FontFile" uid="uid://dnw3gmmsf4lfv" path="res://assets/PixelOperator8-Bold.ttf" id="2_font"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_box"]
+bg_color = Color(0, 0.5176471, 0.42352942, 0.8)
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+
+[node name="InfoBox" type="Label"]
+z_index = 100
+custom_minimum_size = Vector2(230, 190)
+offset_right = 230.0
+offset_bottom = 190.0
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_box")
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("1_info")
