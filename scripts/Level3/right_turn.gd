@@ -38,7 +38,7 @@ func _end_drag():
 	# The mouse may have left the item while dragging: refresh the hover state.
 	if draggable and not Global.mouse_over_area($Area2D):
 		draggable = false
-		scale /= Vector2(1.05, 1.05)
+		scale /= Vector2(1.12, 1.12)
 		label.visible = false
 
 func _exit_tree():
@@ -48,7 +48,7 @@ func _exit_tree():
 
 func _on_area_2d_mouse_entered(): #connected to area2d in object, signals when mouse enters collision shape
 	if not is_dragging and not Global.play: #for smooth movement
-		scale *= Vector2(1.05,1.05)
+		scale *= Vector2(1.12, 1.12)
 		draggable = true
 		label.visible = true
 	if is_dragging:
@@ -57,7 +57,7 @@ func _on_area_2d_mouse_entered(): #connected to area2d in object, signals when m
 
 func _on_area_2d_mouse_exited():
 	if not is_dragging and not Global.play:
-		scale /= Vector2(1.05,1.05)
+		scale /= Vector2(1.12, 1.12)
 		draggable = false
 		label.visible = false
 

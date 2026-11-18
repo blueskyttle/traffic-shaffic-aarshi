@@ -121,3 +121,75 @@ var speed_limit_kmh: float = 50.0
 
 func speed_cap_px() -> float:
 	return 200.0 * speed_limit_kmh / 50.0
+
+# --- Level progress (saved between runs) ---
+const LEVEL_PATHS := [
+	"res://scenes/Level1/level 1.tscn",
+	"res://scenes/Level2/level 2.tscn",
+	"res://scenes/Level3/level 3.tscn",
+]
+const SAVE_PATH := "user://progress.cfg"
+var levels_done: Array = [false, false, false]
+var level_stars: Array = [0, 0, 0]      # best star rating per level (0 = never finished)
+
+func _ready() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(SAVE_PATH) == OK:
+		for i in LEVEL_PATHS.size():
+			levels_done[i] = bool(cfg.get_value("done", str(i), false))
+			level_stars[i] = int(cfg.get_value("stars", str(i), 0))
+
+# Level i (0-based) is open when every level before it has been finished.
+func is_unlocked(i: int) -> bool:
+	for k in i:
+		if not levels_done[k]:
+			return false
+	return true
+
+func complete_level(path: String, stars: int = 1) -> void:
+	var i := LEVEL_PATHS.find(path)
+	if i < 0:
+		return
+	levels_done[i] = true
+	level_stars[i] = maxi(level_stars[i], stars)
+	var cfg := ConfigFile.new()
+	for k in LEVEL_PATHS.size():
+		cfg.set_value("done", str(k), levels_done[k])
+		cfg.set_value("stars", str(k), level_stars[k])
+	cfg.save(SAVE_PATH)
+
+# Opens level i from the menu; "next level" then follows on to the one after it.
+func start_level(i: int) -> void:
+	next_level = LEVEL_PATHS[i + 1] if i + 1 < LEVEL_PATHS.size() else ""
+	get_tree().change_scene_to_file(LEVEL_PATHS[i])
+
+# --- Scoring ---
+# Stars depend on how many items (signs) the player placed on the map: 1 item = 3 stars (the
+# optimal solution of every level), 2 items = 2 stars, 3 or more = 1 star. The Level 3 speed
+# limit sign is not counted (changing the limit is free).
+func items_used() -> int:
+	var scene := get_tree().current_scene
+	var used := 0
+	for n in scene.find_children("*", "Node2D", true, false):
+		var is_item: bool = n.is_in_group("signs") or (n.has_node("Label") and (n.has_node("Sprite2D") or n.has_node("AnimatedSprite2D")))
+		if not is_item or n.has_node("speed buttons"):
+			continue
+		if n.global_position.x < 933.0:        # left the sidebar tray = placed on the map
+			used += 1
+	return used
+
+func stars_for(items: int) -> int:
+	return 3 if items <= 1 else (2 if items == 2 else 1)
+
+# New game: forget every finished level and star, and overwrite the save file.
+func reset_progress() -> void:
+	levels_done = [false, false, false]
+	level_stars = [0, 0, 0]
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
+
+# Continue: first level that is open but not finished yet (the level picker if everything is done).
+func continue_index() -> int:
+	for i in LEVEL_PATHS.size():
+		if not levels_done[i]:
+			return i
+	return -1

@@ -51,7 +51,7 @@ func _process(_delta: float) -> void:
 	var h := _hit(get_global_mouse_position()) and not dragging
 	if h != hovered:
 		hovered = h
-		scale = Vector2.ONE * (1.08 if hovered else 1.0)
+		scale = Vector2.ONE * (1.15 if hovered else 1.0)
 		queue_redraw()
 	if dragging:
 		var m := get_global_mouse_position() - grab_offset
@@ -65,7 +65,7 @@ func _input(event: InputEvent) -> void:
 		if _hit(get_global_mouse_position()):
 			dragging = true
 			grab_offset = get_global_mouse_position() - global_position
-			scale = Vector2.ONE * 1.08
+			scale = Vector2.ONE * 1.15
 			queue_redraw()
 			get_viewport().set_input_as_handled()
 	elif dragging:

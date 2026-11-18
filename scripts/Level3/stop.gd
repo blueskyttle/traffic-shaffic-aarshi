@@ -39,7 +39,7 @@ func _end_drag():
 	is_dragging = false
 	if draggable and not Global.mouse_over_area($Area2D):   # the mouse left the sign while dragging
 		draggable = false
-		scale /= Vector2(1.05, 1.05)
+		scale /= Vector2(1.12, 1.12)
 		label.visible = false
 
 func _exit_tree():
@@ -48,7 +48,7 @@ func _exit_tree():
 
 func _on_area_2d_mouse_entered():
 	if not is_dragging and not Global.play:
-		scale *= Vector2(1.05, 1.05)
+		scale *= Vector2(1.12, 1.12)
 		draggable = true
 		label.visible = true
 	if is_dragging:
@@ -56,7 +56,7 @@ func _on_area_2d_mouse_entered():
 
 func _on_area_2d_mouse_exited():
 	if not is_dragging and not Global.play:
-		scale /= Vector2(1.05, 1.05)
+		scale /= Vector2(1.12, 1.12)
 		draggable = false
 		label.visible = false
 

@@ -12,6 +12,8 @@ var frozen := false
 
 func _ready():
 	label.visible = false
+	if inarea:
+		scale /= Vector2(1.12, 1.12)
 	inarea = false
 	frozen = false
 	Global.speed_limit_kmh = 50.0     # always starts on 50 (also after a restart)
@@ -32,10 +34,14 @@ func _on_area_2d_mouse_entered():
 	if Global.play:
 		return
 	label.visible = true
+	if not inarea:
+		scale *= Vector2(1.12, 1.12)
 	inarea = true
 
 func _on_area_2d_mouse_exited():
 	label.visible = false
+	if inarea:
+		scale /= Vector2(1.12, 1.12)
 	inarea = false
 
 func _on_thirty_pressed():
